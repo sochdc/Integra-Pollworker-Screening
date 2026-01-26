@@ -1,31 +1,90 @@
+
+<!--
+<div class="w-full">
+  <div class="flex gap-3 items-center mb-3">
+
+<button
+      class="px-4 py-2 rounded-lg border text-sm font-semibold"
+      [class.border-green-600]="activeTab() === 'ACTIVE'"
+      [class.bg-green-50]="activeTab() === 'ACTIVE'"
+      (click)="setTab('ACTIVE')"
+    >
+      ✅ Active - {{ counts().active }}
+    </button>
+
+    <button
+      class="px-4 py-2 rounded-lg border text-sm font-semibold"
+      [class.border-blue-600]="activeTab() === 'NEW'"
+      [class.bg-blue-50]="activeTab() === 'NEW'"
+      (click)="setTab('NEW')"
+    >
+      👥 New - {{ counts().new }}
+    </button>
+
+        <button
+      class="px-4 py-2 rounded-lg border text-sm font-semibold"
+      [class.border-orange-600]="activeTab() === 'PENDING'"
+      [class.bg-orange-50]="activeTab() === 'PENDING'"
+      (click)="setTab('PENDING')"
+    >
+      ⏳ Pending - {{ counts().pending }}
+    </button>
+ <div class="ml-auto px-4 py-2 rounded-lg border text-sm font-bold bg-gray-50">
+      Total - {{ counts().total }}
+    </div>
+  </div> 
+  AG Grid 
+  <ag-grid-angular
+    class="ag-theme-alpine w-full"
+    style="height: calc(100vh - 180px);"
+    [rowData]="filteredRows()"
+    [columnDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+    [animateRows]="true"
+    [pagination]="true"
+    [paginationPageSize]="25"
+    (gridReady)="onGridReady($event)"
+    (rowDoubleClicked)="onRowDoubleClicked($event)"
+  >
+  </ag-grid-angular>
+</div>
+-->
+
 @if(show()){
-  <app-soch-ag [screenId]="dataModel()!.dataModelUniqueId" [localityInfo]="localityInfo()" (showType)="getType($event)"></app-soch-ag>
+<app-soch-ag [screenId]="dataModel()!.dataModelUniqueId" [localityInfo]="localityInfo()" (showType)="getType($event)"></app-soch-ag>
 }
 
 @if(!show())
 {
   <div class="flex justify-center items-center h-screen">
-    <div class="p-8 bg-white-500 text-black rounded-lg">
-      <div class="mx-auto w-full text-center text-4xl m-auto mb-2">
-        Fetching information
-      </div>
+  <div class="p-8 bg-white-500 text-black rounded-lg">
+    <div class="mx-auto w-full text-center text-4xl m-auto mb-2">
+  Fetching information
+  </div>
 
-      <div class="mx-auto w-full max-w-lg rounded-md border border-blue-300 p-4">
-        <div class="flex animate-pulse space-x-4">
-          <div class="size-10 rounded-full bg-gray-200"></div>
-          <div class="flex-1 space-y-6 py-1">
-            <div class="h-2 rounded bg-gray-200"></div>
-            <div class="space-y-3">
-              <div class="grid grid-cols-3 gap-4">
-                <div class="col-span-2 h-2 rounded bg-gray-200"></div>
-                <div class="col-span-1 h-2 rounded bg-gray-200"></div>
-              </div>
-              <div class="h-2 rounded bg-gray-200"></div>
-              <div>Loading...</div>
-            </div>
-          </div>
+<div class="mx-auto w-full max-w-lg rounded-md border border-blue-300 p-4">
+  <div class="flex animate-pulse space-x-4">
+    <div class="size-10 rounded-full bg-gray-200"></div>
+    <div class="flex-1 space-y-6 py-1">
+      <div class="h-2 rounded bg-gray-200"></div>
+      <div class="space-y-3">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="col-span-2 h-2 rounded bg-gray-200"></div>
+          <div class="col-span-1 h-2 rounded bg-gray-200"></div>
         </div>
+        <div class="h-2 rounded bg-gray-200"></div>
+        <div>Loading...</div>
       </div>
     </div>
   </div>
+</div>
+  </div>
+</div>
+}
+
+@if(showCreate())
+{
+  <app-Screening [screenNames]="dd()!"  [incidentDTO]="selectedIncidentDto()"  (create)="onCreate($event)" (isClose)="clear()"></app-Screening>
+
+ <!---<app-background37 [show]="showCreate()" (close)="clear()"></app-background37>--> 
 }

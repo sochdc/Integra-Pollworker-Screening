@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, inject, input, signal, untracked } from '@angular/core';
-import { DataModelDTO, UserDTOLoc } from '../model';
+import { DataModelDTO, IncidentManagementSystemDTO, screenName, UserDTOLoc } from '../model';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { Helpservice } from '../helpservice';
 import { HttpClient } from '@angular/common/http';
@@ -12,6 +12,7 @@ import { APP_CONFIG_END_POINT } from '../endpoint';
   templateUrl: './screeningparent.html',
   styleUrl: './screeningparent.scss',
 })
+
 export class Screeningparent {
 protected localityInfo = input<UserDTOLoc>(new UserDTOLoc);
 protected accessToken = input<string>('');
@@ -20,6 +21,13 @@ private oktaAuth = inject(OKTA_AUTH);
 protected internalCode = input<string>('');
 public type = signal<DataModelDTO | null>(null);
 public dataModel=input<DataModelDTO|null>(null);
+
+
+public dd = signal<Array<screenName> | null>(null);
+public selectedIncidentDto = signal<IncidentManagementSystemDTO | null>(null);
+public showCreate = signal<true | false>(false);
+
+
 constructor(private helpService:Helpservice,private httpClient:HttpClient) {
   this.show.set(false);
     // The effect will run immediately and every time myInput() changes
@@ -64,15 +72,56 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
         }
       })
   }
-
+/*
   getType(event:any)
   {
     if(event.detail.create){
     // this.showCreate.set(true);
+    
     }
     if(event.detail.editData&& event.detail.type){
       // this.showCreate.set(true);
       // this.editDetails.set(event.detail.editData);  
     }
+  } */
+  getDataModels(IPWI101: string) {
+
+    let url = APP_CONFIG_END_POINT.getDataModelByLocalityAndName;
+    this.httpClient.get<screenName[]>(url + "/" + IPWI101 + "/" + this.localityInfo().localityId + "/F")
+      .subscribe({
+        next: (data: Array<screenName>) => {
+          if (data) {
+            this.dd.set(data);
+          }
+
+        }, error: (error) => {
+          console.log(error);
+        }
+      })
   }
+  getType(event: any) {
+    if (!(event.detail.create) && event.detail.type == 'edit') {
+      this.selectedIncidentDto.set(event.detail.editData);
+    }
+    else {
+      this.selectedIncidentDto.set(null);
+    }
+    this.showCreate.set(true);
+
+    //when true ,is to create form or false is for edit option
+  }
+  clear()
+  {
+    this.showCreate.set(false);
+  }
+  onCreate(event:any)
+  {
+    this.showCreate.set(false);
+    this.show.set(false);
+    setTimeout(()=>{
+      this.show.set(true);
+    },100)
+  }
+
+
 }
