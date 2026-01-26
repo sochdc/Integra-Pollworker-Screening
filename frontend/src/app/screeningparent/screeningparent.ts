@@ -13,12 +13,13 @@ import { APP_CONFIG_END_POINT } from '../endpoint';
   styleUrl: './screeningparent.scss',
 })
 export class Screeningparent {
-  protected localityInfo = input<UserDTOLoc>(new UserDTOLoc);
+protected localityInfo = input<UserDTOLoc>(new UserDTOLoc);
 protected accessToken = input<string>('');
 public readonly show = signal<true|false>(false);
 private oktaAuth = inject(OKTA_AUTH);
 protected internalCode = input<string>('');
 public type = signal<DataModelDTO | null>(null);
+public dateModel=input<DataModelDTO|null>(null);
 constructor(private helpService:Helpservice,private httpClient:HttpClient) {
   this.show.set(false);
     // The effect will run immediately and every time myInput() changes
@@ -28,9 +29,11 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
       // Use untracked() if you have operations that don't need to trigger further effects or change detection
       // untracked(() => {
         // console.log('Input changed:', currentValue);
-        if(currentValue !== undefined && currentValue !== null && currentValue.localityId !== undefined && currentValue.localityId != null)
+        if(currentValue !== undefined && currentValue !== null && currentValue.localityId !== undefined && currentValue.localityId != null){
         this.helpService.setLocalityInfo(currentValue);
-      this.getTabs();
+        this.show.set(true);
+        }
+        //this.getTabs();
         // console.log('Input changed:', accessToken);
       //    if(accessToken !== undefined && accessToken !== null && accessToken?.length > 0){
       //   // this.helpService.setAccessToken(accessToken);
