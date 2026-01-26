@@ -19,7 +19,7 @@ public readonly show = signal<true|false>(false);
 private oktaAuth = inject(OKTA_AUTH);
 protected internalCode = input<string>('');
 public type = signal<DataModelDTO | null>(null);
-public dateModel=input<DataModelDTO|null>(null);
+public dataModel=input<DataModelDTO|null>(null);
 constructor(private helpService:Helpservice,private httpClient:HttpClient) {
   this.show.set(false);
     // The effect will run immediately and every time myInput() changes
@@ -63,5 +63,16 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
           console.log(error);
         }
       })
+  }
+
+  getType(event:any)
+  {
+    if(event.detail.create){
+    // this.showCreate.set(true);
+    }
+    if(event.detail.editData&& event.detail.type){
+      // this.showCreate.set(true);
+      // this.editDetails.set(event.detail.editData);  
+    }
   }
 }
