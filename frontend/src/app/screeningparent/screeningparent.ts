@@ -1,16 +1,18 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, inject, input, signal, untracked } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, inject, Input, input, signal, untracked } from '@angular/core';
 import { DataModelDTO, IncidentManagementSystemDTO, screenName, UserDTOLoc } from '../model';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { Helpservice } from '../helpservice';
 import { HttpClient } from '@angular/common/http';
 import { APP_CONFIG_END_POINT } from '../endpoint';
+import { Background37 } from '../background37/background37';
+import { CreatePollworker } from '../create-pollworker/create-pollworker';
 
 @Component({
   selector: 'app-screeningparent',
-  imports: [],
+  imports: [Background37,CreatePollworker],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './screeningparent.html',
-  styleUrl: './screeningparent.scss',
+  styleUrl: `./screeningparent.scss`,
 })
 
 export class Screeningparent {
@@ -26,6 +28,8 @@ public dataModel=input<DataModelDTO|null>(null);
 public dd = signal<Array<screenName> | null>(null);
 public selectedIncidentDto = signal<IncidentManagementSystemDTO | null>(null);
 public showCreate = signal<true | false>(false);
+ @Input() isOpen: boolean = false;
+
 
 
 constructor(private helpService:Helpservice,private httpClient:HttpClient) {
@@ -72,26 +76,17 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
         }
       })
   }
-/*
-  getType(event:any)
-  {
-    if(event.detail.create){
-    // this.showCreate.set(true);
-    
-    }
-    if(event.detail.editData&& event.detail.type){
-      // this.showCreate.set(true);
-      // this.editDetails.set(event.detail.editData);  
-    }
-  } */
-  getDataModels(IPWI101: string) {
+    getDataModels() {
 
     let url = APP_CONFIG_END_POINT.getDataModelByLocalityAndName;
-    this.httpClient.get<screenName[]>(url + "/" + IPWI101 + "/" + this.localityInfo().localityId + "/F")
+    this.httpClient.get<screenName[]>(url + "/" + this.dataModel()?.dataModelUniqueId + "/" + this.localityInfo().localityId + "/F")
       .subscribe({
         next: (data: Array<screenName>) => {
           if (data) {
+            console.log("data models:",data);
+
             this.dd.set(data);
+            this.showCreate.set(true);
           }
 
         }, error: (error) => {
@@ -99,17 +94,21 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
         }
       })
   }
-  getType(event: any) {
-    if (!(event.detail.create) && event.detail.type == 'edit') {
-      this.selectedIncidentDto.set(event.detail.editData);
-    }
-    else {
-      this.selectedIncidentDto.set(null);
-    }
-    this.showCreate.set(true);
 
-    //when true ,is to create form or false is for edit option
-  }
+  getType(event:any)
+  {
+    if(event.detail.create){
+      this.getDataModels();
+    
+    
+    }
+    if(event.detail.editData&& event.detail.type){
+       this.getDataModels();
+      // this.showCreate.set(true);
+      //this.editDetails.set(event.detail.editData);  
+    }
+  } 
+  
   clear()
   {
     this.showCreate.set(false);

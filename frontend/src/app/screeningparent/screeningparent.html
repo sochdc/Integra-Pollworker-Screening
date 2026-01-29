@@ -108,63 +108,6 @@
 </div>
 </div>
 
-
-
-
-
-
-
-<!--
-<div class="w-full">
-  <div class="flex gap-3 items-center mb-3">
-
-<button
-      class="px-4 py-2 rounded-lg border text-sm font-semibold"
-      [class.border-green-600]="activeTab() === 'ACTIVE'"
-      [class.bg-green-50]="activeTab() === 'ACTIVE'"
-      (click)="setTab('ACTIVE')"
-    >
-      ✅ Active - {{ counts().active }}
-    </button>
-
-    <button
-      class="px-4 py-2 rounded-lg border text-sm font-semibold"
-      [class.border-blue-600]="activeTab() === 'NEW'"
-      [class.bg-blue-50]="activeTab() === 'NEW'"
-      (click)="setTab('NEW')"
-    >
-      👥 New - {{ counts().new }}
-    </button>
-
-        <button
-      class="px-4 py-2 rounded-lg border text-sm font-semibold"
-      [class.border-orange-600]="activeTab() === 'PENDING'"
-      [class.bg-orange-50]="activeTab() === 'PENDING'"
-      (click)="setTab('PENDING')"
-    >
-      ⏳ Pending - {{ counts().pending }}
-    </button>
- <div class="ml-auto px-4 py-2 rounded-lg border text-sm font-bold bg-gray-50">
-      Total - {{ counts().total }}
-    </div>
-  </div> 
-  AG Grid 
-  <ag-grid-angular
-    class="ag-theme-alpine w-full"
-    style="height: calc(100vh - 180px);"
-    [rowData]="filteredRows()"
-    [columnDefs]="colDefs"
-    [defaultColDef]="defaultColDef"
-    [animateRows]="true"
-    [pagination]="true"
-    [paginationPageSize]="25"
-    (gridReady)="onGridReady($event)"
-    (rowDoubleClicked)="onRowDoubleClicked($event)"
-  >
-  </ag-grid-angular>
-</div>
--->
-
 @if(show()){
 <app-soch-ag [screenId]="dataModel()!.dataModelUniqueId" [localityInfo]="localityInfo()" (showType)="getType($event)"></app-soch-ag>
 }
@@ -199,7 +142,7 @@
 
 @if(showCreate())
 {
-  <app-Screening [screenNames]="dd()!"  [incidentDTO]="selectedIncidentDto()"  (create)="onCreate($event)" (isClose)="clear()"></app-Screening>
+  <app-create-pollworker [screenNames]="dd()!"  [incidentDTO]="selectedIncidentDto()"  (create)="onCreate($event)" (isClose)="clear()"></app-create-pollworker>
 
- <!---<app-background37 [show]="showCreate()" (close)="clear()"></app-background37>--> 
+ <app-background37 [show]="showCreate()" (close)="clear()"></app-background37>
 }

@@ -530,4 +530,416 @@ export class IncidentPriorityDTO {
   public  activeFlag:boolean=false;
 } 
 
+export interface StateObject {
+  name: string;
+  code: string;
+}
 
+const statesList: StateObject[] = [
+  {
+  name:'Choose a state',
+  code: '',
+  },
+  {
+    name: 'Alabama',
+    code: 'AL',
+  },
+  {
+    name: 'Alaska',
+    code: 'AK',
+  },
+  {
+    name: 'Arizona',
+    code: 'AZ',
+  },
+  {
+    name: 'Arkansas',
+    code: 'AR',
+  },
+  {
+    name: 'California',
+    code: 'CA',
+  },
+  {
+    name: 'Colorado',
+    code: 'CO',
+  },
+  {
+    name: 'Connecticut',
+    code: 'CT',
+  },
+  {
+    name: 'Delaware',
+    code: 'DE',
+  },
+  {
+    name: 'Florida',
+    code: 'FL',
+  },
+  {
+    name: 'Georgia',
+    code: 'GA',
+  },
+  {
+    name: 'Hawaii',
+    code: 'HI',
+  },
+  {
+    name: 'Idaho',
+    code: 'ID',
+  },
+  {
+    name: 'Illinois',
+    code: 'IL',
+  },
+  {
+    name: 'Indiana',
+    code: 'IN',
+  },
+  {
+    name: 'Iowa',
+    code: 'IA',
+  },
+  {
+    name: 'Kansas',
+    code: 'KS',
+  },
+  {
+    name: 'Kentucky',
+    code: 'KY',
+  },
+  {
+    name: 'Louisiana',
+    code: 'LA',
+  },
+  {
+    name: 'Maine',
+    code: 'ME',
+  },
+  {
+    name: 'Maryland',
+    code: 'MD',
+  },
+  {
+    name: 'Massachusetts',
+    code: 'MA',
+  },
+  {
+    name: 'Michigan',
+    code: 'MI',
+  },
+  {
+    name: 'Minnesota',
+    code: 'MN',
+  },
+  {
+    name: 'Mississippi',
+    code: 'MS',
+  },
+  {
+    name: 'Missouri',
+    code: 'MO',
+  },
+  {
+    name: 'Montana',
+    code: 'MT',
+  },
+  {
+    name: 'Nebraska',
+    code: 'NE',
+  },
+  {
+    name: 'Nevada',
+    code: 'NV',
+  },
+  {
+    name: 'New Hampshire',
+    code: 'NH',
+  },
+  {
+    name: 'New Jersey',
+    code: 'NJ',
+  },
+  {
+    name: 'New Mexico',
+    code: 'NM',
+  },
+  {
+    name: 'New York',
+    code: 'NY',
+  },
+  {
+    name: 'North Carolina',
+    code: 'NC',
+  },
+  {
+    name: 'North Dakota',
+    code: 'ND',
+  },
+  {
+    name: 'Ohio',
+    code: 'OH',
+  },
+  {
+    name: 'Oklahoma',
+    code: 'OK',
+  },
+  {
+    name: 'Oregon',
+    code: 'OR',
+  },
+  {
+    name: 'Pennsylvania',
+    code: 'PA',
+  },
+  {
+    name: 'Rhode Island',
+    code: 'RI',
+  },
+  {
+    name: 'South Carolina',
+    code: 'SC',
+  },
+  {
+    name: 'South Dakota',
+    code: 'SD',
+  },
+  {
+    name: 'Tennessee',
+    code: 'TN',
+  },
+  {
+    name: 'Texas',
+    code: 'TX',
+  },
+  {
+    name: 'Utah',
+    code: 'UT',
+  },
+  {
+    name: 'Vermont',
+    code: 'VT',
+  },
+  {
+    name: 'Virginia',
+    code: 'VA',
+  },
+  {
+    name: 'Washington',
+    code: 'WA',
+  },
+  {
+    name: 'West Virginia',
+    code: 'WV',
+  },
+  {
+    name: 'Wisconsin',
+    code: 'WI',
+  },
+  {
+    name: 'Wyoming',
+    code: 'WY',
+  },
+];
+
+export { statesList };
+ export interface MonthObject {
+  name: string;
+  value: string;
+}
+ const monthsList: MonthObject[] = [
+  {name:'Choose a month', value:''},
+  { name: 'January', value: 'jan' },
+  { name: 'February', value: 'feb' },
+  { name: 'March', value: 'mar' },
+  { name: 'April', value: 'apr' },
+  { name: 'May', value: 'may' },
+  { name: 'June', value: 'jun' },
+  { name: 'July', value: 'jul' },
+  { name: 'August', value: 'aug' },
+  { name: 'September', value: 'sep' },
+  { name: 'October', value: 'oct' },
+  { name: 'November', value: 'nov' },
+  { name: 'December', value: 'dec' },
+];
+
+export {monthsList};
+
+  export interface DateObject {
+  name: string;  
+  value: string;
+}
+
+export interface primaryLanguageObject {
+  name: string;
+  code: string;
+
+}
+
+const primaryLanguageList: primaryLanguageObject[] = [ {
+   name: '-- Select Language1  --',
+    code: '',
+},
+  {
+    name: 'Amharic',
+    code: 'am',
+  },
+  {
+    name: 'Arabic',
+    code: 'ar',
+  },
+  {
+    name: 'Bassa',
+    code: 'bsq',
+  },
+  {
+    name: 'Bengali',
+    code: 'bn',
+  },
+  {
+    name: 'Chinese',
+    code: 'zh',
+  },
+  {
+    name: 'English',
+    code: 'en',
+  },
+  {
+    name: 'Farsi',
+    code: 'fa',
+  },
+  {
+    name: 'French',
+    code: 'fr',
+  },
+  {
+    name: 'German',
+    code: 'de',
+  },
+  {
+    name: 'Hindi',
+    code: 'hi',
+  },
+  {
+    name: 'Ibo',
+    code: 'ig',
+  },
+  {
+    name: 'Other',
+    code: 'other',
+  },
+  {
+    name: 'Panjabi',
+    code: 'pa',
+  },
+  {
+    name: 'Spanish',
+    code: 'es',
+  },
+  {
+    name: 'Tagalog – Filipino',
+    code: 'fil',
+  },
+  {
+    name: 'Urdu',
+    code: 'ur',
+  },
+  {
+    name: 'Vietnamese',
+    code: 'vi',
+  },
+  {
+    name: 'Yoruba',
+    code: 'yo',
+  },
+]
+
+export {primaryLanguageList};
+
+
+export interface secondaryLanguageObject {
+  name: string;
+  code: string;
+}
+
+
+
+const secondaryLanguageList: secondaryLanguageObject[] = [
+  {
+    name: '-- Select Language 2(optional) --',
+    code: '',
+  },
+  {
+    name: 'Amharic',
+    code: 'am',
+  },
+  {
+    name: 'Arabic',
+    code: 'ar',
+  },
+  {
+    name: 'Bassa',
+    code: 'bsq',
+  },
+  {
+    name: 'Bengali',
+    code: 'bn',
+  },
+  {
+    name: 'Chinese',
+    code: 'zh',
+  },
+  {
+    name: 'English',
+    code: 'en',
+  },
+  {
+    name: 'Farsi',
+    code: 'fa',
+  },
+  {
+    name: 'French',
+    code: 'fr',
+  },
+  {
+    name: 'German',
+    code: 'de',
+  },
+  {
+    name: 'Hindi',
+    code: 'hi',
+  },
+  {
+    name: 'Ibo',
+    code: 'ig',
+  },
+  {
+    name: 'Other',
+    code: 'other',
+  },
+  {
+    name: 'Panjabi',
+    code: 'pa',
+  },
+  {
+    name: 'Spanish',
+    code: 'es',
+  },
+  {
+    name: 'Tagalog – Filipino',
+    code: 'fil',
+  },
+  {
+    name: 'Urdu',
+    code: 'ur',
+  },
+  {
+    name: 'Vietnamese',
+    code: 'vi',
+  },
+  {
+    name: 'Yoruba',
+    code: 'yo',
+  },
+]
+export { secondaryLanguageList };
