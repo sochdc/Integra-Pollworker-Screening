@@ -18,8 +18,8 @@ import { Screeningparent } from './app/screeningparent/screeningparent';
   const app = await createApplication({
     providers: [
       provideZonelessChangeDetection(),
-       provideHttpClient(withInterceptors([authInterceptor])),
-         importProvidersFrom(
+      provideHttpClient(withInterceptors([authInterceptor])),
+      importProvidersFrom(
       OktaAuthModule.forRoot({
         oktaAuth: new OktaAuth({
           issuer: environment.oktaUrl,

@@ -1,10 +1,9 @@
 
-import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, EventEmitter, inject, Injector, Input, input, Output, output, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, effect, EventEmitter, inject, Injector, Input, input, Output, output, signal } from '@angular/core';
 import { Background37 } from '../background37/background37';
 import { MonthObject, monthsList, primaryLanguageList, primaryLanguageObject, screenName, secondaryLanguageList, secondaryLanguageObject, StateObject, statesList } from '../model';
 import { CommonModule } from '@angular/common';
 import {  FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Helpservice } from '../helpservice';
 import { ScreeningService } from '../screening-service';
 
@@ -24,6 +23,7 @@ interface FieldConfig {
   selector: 'app-create-pollworker',
   imports: [CommonModule,FormsModule,ReactiveFormsModule],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
+  providers:[],
   templateUrl: './create-pollworker.html',
   styleUrl: './create-pollworker.scss',
 })
@@ -31,7 +31,7 @@ export class CreatePollworker {
  screenNames = input<Array<screenName>>([]);
   public createPollworkerForm: FormGroup | null = null;
     public readonly show = signal<boolean>(false);
-  private fb = inject(FormBuilder);
+
   public states = signal<Array<StateObject>>([]);
    public months = signal<Array<MonthObject>>([]);
    public showContact = signal<true | false>(false);
@@ -50,15 +50,13 @@ export class CreatePollworker {
 selectedGender: string = '';
   @Output() eventInputData1 = new EventEmitter<any>();
   @Input() editValue: any = null;
- private screeningService = inject(ScreeningService);
- private helpService = inject(Helpservice);
   // SSN show/hide
   public showSsn = signal<boolean>(false);
    public modelValue = signal<any>(null);
   selectedOptionId: number | null = null;
 agreementForm!: FormGroup;
 
-    public genderOptions = signal<{ name: string; value: string }[]>([
+  public genderOptions = signal<{ name: string; value: string }[]>([
   { name: 'Male', value: 'Male' },
   { name: 'Female', value: 'Female' },
   { name: 'Other', value: 'Other' },
@@ -68,13 +66,15 @@ agreementForm!: FormGroup;
 
   pwQuestionData: any;
 
-  constructor(private injector: Injector){
+  constructor(private fb:FormBuilder,private helpService:Helpservice,
+    private screeningService:ScreeningService,private cdr:ChangeDetectorRef){
    this.states.set(statesList);
    this.months.set(monthsList);
    this.primaryLanguage.set(primaryLanguageList);
    this.secondaryLanguage.set(secondaryLanguageList);
-   this.getPWLoadMethodData();
+ 
  effect(() => {
+   this.getPWLoadMethodData();
       const one = this.screenNames();
       if (one) {
      this.createPollworkerForm = this.fb.group({});
@@ -89,6 +89,7 @@ agreementForm!: FormGroup;
   }
 
   this.updateDaysDropdown();
+ 
   
       }
       this.modelValue.set(this.editValue ?? null);
@@ -159,17 +160,17 @@ console.log("Required Condition:",fieldData)
 }
 
 getPWLoadMethodData() {
+  console.log(this.helpService.localityInfo());
   console.log("inside pw load data method:")
     let applicationId = this.helpService.localityInfo().applicationId!;
-        this.screeningService.getPWLoadData(applicationId,2)
+        this.screeningService.getPWLoadData(applicationId)
             .subscribe({
                 next: (pwQuestion: any) => {
                   console.log("inside pw question is:",pwQuestion)
-                    if (pwQuestion && pwQuestion.length > 0)
-                        this.pwQuestionData.set(pwQuestion);
+                   
                 },
                 error: (error) => {
-                  // console.error(error);
+                   console.error(error);
                 }
             });
     }
@@ -254,39 +255,24 @@ sendValue(event:any) {
     }
   } */
  getAddress(event: any) {
-  // soch-checkbox should emit boolean OR { detail: boolean }
-  const checked = typeof event === 'boolean' ? event : !!event?.detail;
 
-  if (!this.createPollworkerForm) return;
-
-  const map: Array<[string, string]> = [
-    ['address1', 'mailingAddress1'],
-    ['address2', 'mailingAddress2'],
-    ['city', 'mailingCity'],
-    ['state', 'mailingState'],
-    ['zipCode', 'mailingZipCode'],
-  ];
-
-  if (checked) {
-    map.forEach(([from, to]) => {
-      const val = this.createPollworkerForm?.get(from)?.value ?? null;
-      this.createPollworkerForm?.get(to)?.setValue(val);
-      this.createPollworkerForm?.get(to)?.markAsDirty();
-      //this.createPollworkerForm?.get(to)?.updateValueAndValidity({ emitEvent: false });
-    });
-  } else {
-    // if you want to clear when unchecked
-    map.forEach(([_, to]) => {
-     /* if(to === 'mailingState'){
-        console.log('mailingState value:',this.createPollworkerForm?.get('mailingState')?.value);
-      this.createPollworkerForm?.get(to)?.reset('');
-      } else{*/
-        this.createPollworkerForm?.get(to)?.reset();
-   //   }
-     // this.createPollworkerForm?.get(to)?.markAsPristine();
-      //this.createPollworkerForm?.get(to)?.updateValueAndValidity({ emitEvent: false });
-    });
+  if(event.detail)
+  {
+    this.createPollworkerForm?.get('mailingAddress1')?.setValue(this.createPollworkerForm?.get('address1')?.value);
+    this.createPollworkerForm?.get('mailingAddress2')?.setValue(this.createPollworkerForm?.get('address2')?.value);
+    this.createPollworkerForm?.get('mailingCity')?.setValue(this.createPollworkerForm?.get('city')?.value);
+    this.createPollworkerForm?.get('mailingState')?.setValue(this.createPollworkerForm?.get('state')?.value);
+    this.createPollworkerForm?.get('mailingZipCode')?.setValue(this.createPollworkerForm?.get('zipCode')?.value);
   }
+  else{
+     this.createPollworkerForm?.get('mailingAddress1')?.setValue(null);
+    this.createPollworkerForm?.get('mailingAddress2')?.setValue(null);
+    this.createPollworkerForm?.get('mailingCity')?.setValue(null);
+    this.createPollworkerForm?.get('mailingState')?.setValue(null);
+    this.createPollworkerForm?.get('mailingZipCode')?.setValue(null);
+  }
+  console.log(this.createPollworkerForm?.value);
+  this.cdr.detectChanges();
 }
 saveGender(event: any){
   console.log("event is :",event)

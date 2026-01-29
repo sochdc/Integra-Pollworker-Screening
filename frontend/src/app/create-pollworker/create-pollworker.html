@@ -56,9 +56,10 @@
   }
         </div>
        <div class="form-check form-check-inline flex">
-        <span>Gender</span>
-       <soch-radio-button (eventInputData)="saveGender($event)"
-            [options]="genderOptions()" ></soch-radio-button>
+        <span>Gender&nbsp;</span>
+       <!-- <soch-radio-button (eventInputData)="saveGender($event)"
+            [options]="genderOptions()" ></soch-radio-button> -->
+            <soch-other-radio [options]="genderOptions()" (eventInputData)="getFieldValue('gender')" [editValue]="getFieldValue('gender')"></soch-other-radio>
 </div>
  <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-3">
         <soch-input-text [fieldObject]="getFiledObject('yearOfBirth')" (eventInputData)="saveData('yearOfBirth',$event)"
@@ -69,32 +70,11 @@
             [options]="days()" (click)="updateDaysDropdown()" [editValue]="getFieldValue('dayOfBirth')"></soch-select> 
 </div>
 <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-1">
-          <soch-input-text [fieldObject]="getFiledObject('ssn')" (eventInputData)="saveData('ssn',$event)"
-            [editValue]="getFieldValue('ssn')"></soch-input-text>
+          <!-- <soch-input-text [fieldObject]="getFiledObject('ssn')" (eventInputData)="saveData('ssn',$event)"
+            [editValue]="getFieldValue('ssn')"></soch-input-text> -->
+            <soch-input-ssn [fieldObject]="getFiledObject('ssn')" (eventInputData)="saveData('ssn',$event)" [editValue]="getFieldValue('ssn')"></soch-input-ssn>
         </div>
 
-<button
-  type="button"
-  class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-  (click)="toggleSsn()"
->
-  @if (showSsn()) {
-    <!-- eye -->
-    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"
-      viewBox="0 0 24 24">
-      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7"/>
-      <circle cx="12" cy="12" r="3"/>
-    </svg>
-  } @else {
-    <!-- eye slash -->
-    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"
-      viewBox="0 0 24 24">
-      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19
-               c-7 0-11-7-11-7a21.77 21.77 0 0 1 5.06-6.94"/>
-      <path d="M1 1l22 22"/>
-    </svg>
-  }
-</button>
           <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-2">
           <soch-input-text [fieldObject]="getFiledObject('address1')" (eventInputData)="saveData('address1',$event)"
             [editValue]="getFieldValue('address1')"></soch-input-text>
@@ -106,8 +86,12 @@
             [editValue]="getFieldValue('city')"></soch-input-text>
              <soch-select [fieldObject]="getFiledObject('state')" (eventInputData)="saveData('state', $event)"
             [options]="states()" [editValue]="getFieldValue('state')"></soch-select>
-          <soch-input-text [fieldObject]="getFiledObject('zipCode')" (eventInputData)="saveData('zipCode', $event)"
-            [editValue]="getFieldValue('zipCode')"></soch-input-text>
+          <!-- <soch-input-text [fieldObject]="getFiledObject('zipCode')" (eventInputData)="saveData('zipCode', $event)"
+            [editValue]="getFieldValue('zipCode')"></soch-input-text> -->
+            <soch-input-zipcode [fieldObject]="getFiledObject('zipCode')" (eventInputData)="saveData('zipCode', $event)"
+            [editValue]="getFieldValue('zipCode')">
+
+            </soch-input-zipcode>
         </div>
 <div class="grid grid-cols-1 mb-3 mt-3 gap-4 md:grid-cols-1">
           <soch-checkbox [displayName]="'Mailing address is same as physical address'"
@@ -209,19 +193,26 @@
     </form>
   </div>
 </div>
-  <div class="flex shrink-0 justify-end px-4 py-4">
-      <button type="submit"
-        class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
-        aria-label="Save" (click)="clearCreate()">
-        Save
-      </button>
-    </div>
+
 
         }
 
       </div>
     </div>
     }
+       <div class="flex shrink-0 justify-end px-2 py-2">
+        
+           
+                   <button type="submit" class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500" (click)="clearCreate()">Send</button>
+          
+           
+
+
+
+
+            
+           
+          </div>
 
   </div>
 </div>

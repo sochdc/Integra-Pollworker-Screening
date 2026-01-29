@@ -38,6 +38,6 @@ export const APP_CONFIG_END_POINT = {
   getTabInfo:apiBaseUrl+"getTabInfo",
   getDataModelByLocalityAndName: apiBaseUrl + "getDataModelByLocalityAndName",
   getPWLoadData: apiBaseUrl + 'getPWLoadData',
-
+  getPollWorkersDecisionCountJson:apiBaseUrl+"getPollWorkersDecisionCountJson"
   
 }
