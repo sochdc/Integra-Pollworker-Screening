@@ -22,15 +22,12 @@ export class ScreeningService {
   }
   getPWLoadData(applicationId: number, pwQuestionId?: number): Observable<any> {
   const url = APP_CONFIG_END_POINT.getPWLoadData;
-
   const params: any = {
     applicationId: applicationId
   };
-
   if (pwQuestionId) {
     params.pwQuestionId = pwQuestionId;
   }
-
   return this.http.get<any>(url, { params });
 }
 }

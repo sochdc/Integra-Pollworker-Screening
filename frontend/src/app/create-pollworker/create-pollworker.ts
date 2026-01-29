@@ -1,3 +1,4 @@
+
 import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, EventEmitter, inject, Injector, Input, input, Output, output, signal } from '@angular/core';
 import { Background37 } from '../background37/background37';
 import { MonthObject, monthsList, primaryLanguageList, primaryLanguageObject, screenName, secondaryLanguageList, secondaryLanguageObject, StateObject, statesList } from '../model';

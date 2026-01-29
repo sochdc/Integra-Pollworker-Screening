@@ -84,7 +84,6 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
         next: (data: Array<screenName>) => {
           if (data) {
             console.log("data models:",data);
-
             this.dd.set(data);
             this.showCreate.set(true);
           }
