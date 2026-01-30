@@ -358,7 +358,11 @@ export class PollWorkerDTO {
   monthOfBirth:any|null=null;
   yearOfBirth:any|null=null;
   ssn:any|null=null;
-  contactPreferenceDTO:any|null=null;
+  contactPreferenceDTOs:ContactPreferenceDTO|null=null;
+electionPartiesDTOs : ElectionPartiesDTO | null = null;
+languageDTOs: LanguageDTO | null= null;
+pwQuestionsDTO: PwQuestionsDTO | null = null;
+
   primaryLanguageOther:any|null=null;
   agreeTerms:any|null=null;
   primaryLanguageDTO:any|null=null;
@@ -375,6 +379,8 @@ export class PollWorkerDTO {
   pwOtherInformation:any|null=null;
   complaints:any|null=null;
 }
+
+
 
 export class PWDecisionStatusDTO {
   pwDecisionStatusId:any|null=null;
@@ -474,6 +480,7 @@ public  incidentManagementId:number|null=null;
   public  urgencyDTO:UrgencyDTO|Array<any>|null=null;
  public  impactDTO:ImpactDTO|Array<any>|null=null;
  public  contactMethodDTO:ContactMethodDTO|Array<any>|null=null;
+ public electionPartiesDTOs : ElectionPartiesDTO|Array<any>|null=null;
   public  incidentPriorityDTO:IncidentPriorityDTO|Array<any>|null=null;
   public  localityId:number=0;
  public  activeFlag:boolean=false;
@@ -771,7 +778,7 @@ export {monthsList};
 }
 
 export interface primaryLanguageObject {
-  name: string;
+    name: string;
   code: string;
 
 }
@@ -950,3 +957,66 @@ export interface ElectionPartyDTO {
   activeFlag: boolean | null;
   count: number;
 }            
+
+export interface pwLoadData {
+  contactPreferenceDTOs :  Array<ContactPreferenceDTO>;
+  electionPartiesDTOs : Array<ElectionPartiesDTO>;
+  languageDTOs: Array<LanguageDTO>;
+ pwQuestionsDTO: Array<PwQuestionsDTO>
+}
+export class ContactPreferenceDTO {
+contactPreferenceId:Number|null=null;
+name:String|null=null;
+}
+export class ElectionPartiesDTO{
+electionPartyId:Number|null=null;
+partyName: String|null=null;
+activeFlag: boolean | undefined|null;
+count: Number|null=null;
+}
+export class LanguageDTO{
+  languageId: Number|null=null;
+  name: String|null=null;
+}
+export class PwQuestionsDTO{
+  generalQAs:Array<PollWorkerQuestionDTO>|null=null;
+  disclaimer:String|null=null;
+miscellaneousQAs:Array<PollWorkerQAsDTO>|null=null;
+
+}
+
+export class PollWorkerQuestionDTO {
+pwQuestionId:number| null=null;
+name:string |null=null;
+pwQuestionOptionDTOs: Array<PWQuestionOptionDTO>|null=null;
+pwChildQuestionDTOs: Array<PollWorkerQuestionDTO>|null=null;
+radioFlag:boolean | undefined|null;
+dropdownFlag:boolean | undefined|null;
+textBoxFlag:boolean | undefined|null;
+optionFlag:boolean | undefined|null;
+childExists:boolean | undefined|null;
+createdBy:string|null=null;
+updatedBy:string|null=null;
+activeFlag:boolean |undefined|null;
+orderOfInsertion:number|null=null;
+requiredFlag:boolean|undefined|null;
+selectedValue:number |null=null;
+parentQuestionId:number|null=null;
+}
+export class PWQuestionOptionDTO {
+pwQuestionOptionId:number|null=null;
+name:string|null=null;
+activeFlag:boolean|undefined|null;
+createdBy:String | null=null;
+selected:boolean|undefined|null; ;
+}
+export class PollWorkerQAsDTO {
+pollworkerQAId:number|null=null;
+answer:string|null=null;
+pwQuestionOptionDTO: any;
+childQAsDTO: PollWorkerQAsDTO |null=null;
+pollWorkerQuestionDTO: any;
+createdBy:string|null=null;
+updatedBy:string|null=null;
+name:string|null=null;
+}

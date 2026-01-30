@@ -82,7 +82,7 @@ vaVoterSelected = signal<any>(null);
  effect(() => {
   this.applicationId = this.helpService.localityInfo().applicationId!;
   this.getPWLoadMethodData();
-this.getPWLoadMethodDataWithQuestionId();
+
 
       const one = this.screenNames();
       if (one) {
@@ -164,55 +164,36 @@ console.log("Required Condition:",fieldData)
       );
   });
 }
-getPWLoadMethodDataWithQuestionId() {
-let pwQuestionId=1342
- this.screeningService.getPWLoadDataWithQuestionId(this.applicationId,pwQuestionId)
-            .subscribe({
-                next: (pwQuestion: any) => {
-                  console.log("inside getPWLoadDataWithQuestionId question is:",pwQuestion)
-                  },
-                error: (error) => {
-                   console.error('getPWLoadDataWithQuestionId Load API error:',error);
-                }
-            });
-}
-
 
 getPWLoadMethodData() {
         this.screeningService.getPWLoadData(this.applicationId)
             .subscribe({
                 next: (pwQuestion: any) => {
                   console.log("inside pw question is:",pwQuestion)
-                  //work
                   this.pwLoadData.set(pwQuestion);
-                  const electionOptions = (pwQuestion.electionPartiesDTOs || []).map(
+                  const electionOptions = (pwQuestion.pwQuestionsDTO|| []).map(
     (party: any) => ({
-      name: party.partyName,
-      value: party.electionPartyId
+      name: party.name,
+      id: party.pwQuestionId
     })
   );
-
   this.electionPartyOptions.set(electionOptions); 
-  console.log('Election Party Options details:',electionOptions)
         const questions = pwQuestion?.pwQuestionsDTO?.generalQAs ?? [];
         this.generalQuestions.set(questions);
-        console.log(' generalQAs:', questions);
         const vaQuestion = questions.find(
           (q: any) =>
-           q.pwQuestionId === 2
+           q.pwQuestionId
         );
-        console.log(' VA Voter Question:', vaQuestion);
         this.vaVoterQuestion.set(vaQuestion);
         const options = (vaQuestion?.pwQuestionOptionDTOs ?? []).map((o: any) => ({
           name: o.name,
           value: o.pwQuestionOptionId,
         }));
-        console.log(' VA Voter Radio Options:', options);
+       
         this.vaVoterOptions.set(options);
         const selected = vaQuestion?.pwQuestionOptionDTOs?.find(
           (o: any) => o.selected === true
         );
-        console.log('Preselected option from API:', selected);
         this.vaVoterSelected.set(
           selected ? selected.pwQuestionOptionId : null
         );      
@@ -229,6 +210,8 @@ getPWLoadMethodData() {
       return this.screenNames().filter((x) => {
         return x?.fieldName == type;
       })[0];
+
+
       // requiredFlag
       //
     }
@@ -430,11 +413,11 @@ isSubmitEnabled(): boolean {
   return true;
 }
 saveVaVoter(event: any) {
-  console.log('VA voter radio event:', event);
+  
   const selectedValue = event?.detail ?? event;
-  console.log(' Selected value:', selectedValue);
+  
   const q = this.vaVoterQuestion();
-  console.log(' Question BEFORE update:', q);
+  
   if (!q) return;
   this.vaVoterSelected.set(selectedValue);
   q.pwQuestionOptionDTOs?.forEach((o: any) => {
