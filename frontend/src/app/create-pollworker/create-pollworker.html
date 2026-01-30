@@ -148,12 +148,19 @@
           </div>
         </div>
         @for(loadData of pwLoadData()?.pwQuestionsDTO.generalQAs;track loadData.pwQuestionId ){
-        <div class="form-check form-check-inline flex mb-3">
-          <div [innerHTML]="loadData?.name"></div>
+        
+          <div class="grid grid-cols-1">
+              <div [innerHTML]="loadData?.name"></div>
+          </div>
+        
           @if(loadData?.radioFlag){
-          <soch-other-radio [options]="loadData?.pwQuestionOptionDTOs"
+               <div class="grid grid-cols-1">
+            <soch-radio-button [options]="loadData?.pwQuestionOptionDTOs"></soch-radio-button>
+          </div>
+          <!-- <soch-other-radio [options]="loadData?.pwQuestionOptionDTOs"
             (eventInputData)="getFieldValue('pwQuestionsDTO')"
-            [editValue]="getFieldValue('pwQuestionsDTO')"></soch-other-radio>
+            [editValue]="getFieldValue('pwQuestionsDTO')"></soch-other-radio> -->
+            
           }
           @if(loadData?.textBoxFlag)
           {
@@ -170,7 +177,7 @@
           <soch-checkbox [options]="loadData?.pwQuestionOptionDTOs" (eventInputData)="getFieldValue('pwQuestionsDTO')"
             [editValue]="getFieldValue('pwQuestionsDTO')"></soch-checkbox>
           }
-        </div>
+       
           }
 
           <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-1">
