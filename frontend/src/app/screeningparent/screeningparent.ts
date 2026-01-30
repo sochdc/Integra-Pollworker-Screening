@@ -37,29 +37,13 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
     // The effect will run immediately and every time myInput() changes
     effect(() => {
       const currentValue:UserDTOLoc = this.localityInfo();
-      console.log(currentValue);
-      // const accessToken:string = this.accessToken();
-      // Use untracked() if you have operations that don't need to trigger further effects or change detection
-      // untracked(() => {
-        // console.log('Input changed:', currentValue);
+
         if(currentValue !== undefined && currentValue !== null && currentValue.localityId !== undefined && currentValue.localityId != null){
         this.helpService.setLocalityInfo(currentValue);
         this.getDecisions();
         this.show.set(true);
         }
-        //this.getTabs();
-        // console.log('Input changed:', accessToken);
-      //    if(accessToken !== undefined && accessToken !== null && accessToken?.length > 0){
-      //   // this.helpService.setAccessToken(accessToken);
-      // if(currentValue.localityId != null && accessToken?.length > 0)
-      //    this.show.set(true);
-    // }
-    // else{
-    //   // this.oktaAuth.signOut();
-    // }
-        // this.getAccessToken();
-        // Perform actions like making an API call or updating the internal state
-      // });
+      
     });
 }
  getTabs() {
