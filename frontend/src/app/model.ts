@@ -944,10 +944,9 @@ const secondaryLanguageList: secondaryLanguageObject[] = [
 ]
 export { secondaryLanguageList };
 
-export class electionPartiesDTO {
-
-  public  Democrat:string|null=null;
-  public  Repulican:string|null=null;
-  public NoAffiliation:string|null=null;
-  public  activeFlag:boolean=false;
-}
+export interface ElectionPartyDTO {
+  electionPartyId: number;
+  partyName: string|null;
+  activeFlag: boolean | null;
+  count: number;
+}            

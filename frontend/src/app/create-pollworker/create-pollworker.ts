@@ -31,7 +31,7 @@ export class CreatePollworker {
  screenNames = input<Array<screenName>>([]);
   public createPollworkerForm: FormGroup | null = null;
     public readonly show = signal<boolean>(false);
-
+electionPartyOptions = signal<{ name: string; value: number }[]>([]);
   public states = signal<Array<StateObject>>([]);
    public months = signal<Array<MonthObject>>([]);
    public showContact = signal<true | false>(false);
@@ -44,7 +44,7 @@ export class CreatePollworker {
    public displayName= input<string>('');
     @Output() eventInputData = new EventEmitter<any>();
     inputValue: boolean = false;
-
+public applicationId: number =0;
     @Input() questions: any[] = [];
   @Input() indexValue!: number;
 selectedGender: string = '';
@@ -65,6 +65,12 @@ agreementForm!: FormGroup;
 
 
   pwQuestionData: any;
+//Work
+pwLoadData = signal<any>(null);
+generalQuestions = signal<any[]>([]);
+vaVoterQuestion = signal<any>(null);
+vaVoterOptions = signal<{ name: string; value: any }[]>([]);
+vaVoterSelected = signal<any>(null);
 
   constructor(private fb:FormBuilder,private helpService:Helpservice,
     private screeningService:ScreeningService,private cdr:ChangeDetectorRef){
@@ -72,9 +78,12 @@ agreementForm!: FormGroup;
    this.months.set(monthsList);
    this.primaryLanguage.set(primaryLanguageList);
    this.secondaryLanguage.set(secondaryLanguageList);
- 
+
  effect(() => {
-   this.getPWLoadMethodData();
+  this.applicationId = this.helpService.localityInfo().applicationId!;
+  this.getPWLoadMethodData();
+this.getPWLoadMethodDataWithQuestionId();
+
       const one = this.screenNames();
       if (one) {
      this.createPollworkerForm = this.fb.group({});
@@ -87,16 +96,13 @@ agreementForm!: FormGroup;
     this.days.set([]);
     return;
   }
-
   this.updateDaysDropdown();
- 
   
       }
       this.modelValue.set(this.editValue ?? null);
     });
 
   }
-
     get question() {
     return this.questions?.[this.indexValue];
   }
@@ -158,22 +164,65 @@ console.log("Required Condition:",fieldData)
       );
   });
 }
+getPWLoadMethodDataWithQuestionId() {
+let pwQuestionId=1342
+ this.screeningService.getPWLoadDataWithQuestionId(this.applicationId,pwQuestionId)
+            .subscribe({
+                next: (pwQuestion: any) => {
+                  console.log("inside getPWLoadDataWithQuestionId question is:",pwQuestion)
+                  },
+                error: (error) => {
+                   console.error('getPWLoadDataWithQuestionId Load API error:',error);
+                }
+            });
+}
+
 
 getPWLoadMethodData() {
-  console.log(this.helpService.localityInfo());
-  console.log("inside pw load data method:")
-    let applicationId = this.helpService.localityInfo().applicationId!;
-        this.screeningService.getPWLoadData(applicationId)
+        this.screeningService.getPWLoadData(this.applicationId)
             .subscribe({
                 next: (pwQuestion: any) => {
                   console.log("inside pw question is:",pwQuestion)
-                   
+                  //work
+                  this.pwLoadData.set(pwQuestion);
+                  const electionOptions = (pwQuestion.electionPartiesDTOs || []).map(
+    (party: any) => ({
+      name: party.partyName,
+      value: party.electionPartyId
+    })
+  );
+
+  this.electionPartyOptions.set(electionOptions); 
+  console.log('Election Party Options details:',electionOptions)
+        const questions = pwQuestion?.pwQuestionsDTO?.generalQAs ?? [];
+        this.generalQuestions.set(questions);
+        console.log(' generalQAs:', questions);
+        const vaQuestion = questions.find(
+          (q: any) =>
+           q.pwQuestionId === 2
+        );
+        console.log(' VA Voter Question:', vaQuestion);
+        this.vaVoterQuestion.set(vaQuestion);
+        const options = (vaQuestion?.pwQuestionOptionDTOs ?? []).map((o: any) => ({
+          name: o.name,
+          value: o.pwQuestionOptionId,
+        }));
+        console.log(' VA Voter Radio Options:', options);
+        this.vaVoterOptions.set(options);
+        const selected = vaQuestion?.pwQuestionOptionDTOs?.find(
+          (o: any) => o.selected === true
+        );
+        console.log('Preselected option from API:', selected);
+        this.vaVoterSelected.set(
+          selected ? selected.pwQuestionOptionId : null
+        );      
                 },
                 error: (error) => {
-                   console.error(error);
+                   console.error('PW Load API error:',error);
                 }
             });
     }
+    
     
   getFiledObject(type: string): screenName {
     if (this.screenNames) {
@@ -278,6 +327,16 @@ saveGender(event: any){
   console.log("event is :",event)
 
 }
+saveParty(type: string,event: any){
+   this.createPollworkerForm?.get(type)?.setValue(event.detail);
+     if (type == 'electionPartiesDTO') {
+      let electionPartyId= this.electionPartyOptions().filter((x)=> {return x?.name == event.detail.name})[0];
+
+          //  let categoryId = this.categoryData().filter((x) => { return x?.categoryName == event.detail.categoryName })[0]?.categoryId;
+          //  this.getsubcategoryData(categoryId);
+        }
+}
+
    clearCreate() {
     this.showContact.set(false);
   }
@@ -369,6 +428,32 @@ isSubmitEnabled(): boolean {
   if (!this.isQuestionsValid()) return false;
 
   return true;
+}
+saveVaVoter(event: any) {
+  console.log('VA voter radio event:', event);
+  const selectedValue = event?.detail ?? event;
+  console.log(' Selected value:', selectedValue);
+  const q = this.vaVoterQuestion();
+  console.log(' Question BEFORE update:', q);
+  if (!q) return;
+  this.vaVoterSelected.set(selectedValue);
+  q.pwQuestionOptionDTOs?.forEach((o: any) => {
+    o.selected = o.pwQuestionOptionId === selectedValue;
+  });
+  const selectedOpt = q.pwQuestionOptionDTOs?.find(
+    (o: any) => o.pwQuestionOptionId === selectedValue
+  );
+  q.pwQuestionOptionDTO = selectedOpt
+    ? {
+        pwQuestionOptionId: selectedOpt.pwQuestionOptionId,
+        name: selectedOpt.name,
+        selected: true,
+      }
+    : null;
+  console.log(' Selected option object:', selectedOpt);
+  console.log(' Question AFTER update:', q);
+  // refresh signal
+  this.vaVoterQuestion.set({ ...q });
 }
 
 }

@@ -24,4 +24,8 @@ export class ScreeningService {
   const url = APP_CONFIG_END_POINT.getPWLoadData;
   return this.http.get<any>(url+"/"+applicationId);
 }
+getPWLoadDataWithQuestionId(applicationId: number,pwQuestionId:number): Observable<any> {
+  const url = APP_CONFIG_END_POINT.getPWLoadData;
+  return this.http.get<any>(url+"/"+applicationId+"/"+pwQuestionId);
+}
 }

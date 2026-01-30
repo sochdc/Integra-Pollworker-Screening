@@ -61,6 +61,7 @@
             [options]="genderOptions()" ></soch-radio-button> -->
             <soch-other-radio [options]="genderOptions()" (eventInputData)="getFieldValue('gender')" [editValue]="getFieldValue('gender')"></soch-other-radio>
 </div>
+
  <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-3">
         <soch-input-text [fieldObject]="getFiledObject('yearOfBirth')" (eventInputData)="saveData('yearOfBirth',$event)"
             [editValue]="getFieldValue('yearOfBirth')"></soch-input-text>
@@ -117,32 +118,23 @@
   <div class="w-full bg-gray-100 border border-gray-200 p-2 text-xl font-bold">
     Questions
   </div>
-  @if (question) {
-    <div class="w-full border-x border-b border-gray-300 p-4">
-      <div class="text-lg font-semibold">
-        @if (question.requiredFlag) {
-          <span class="text-red-600">*</span>
-        }
-        {{ question.name }}
-      </div>
-      <div class="mt-3">
-        @for (opt of question.pwQuestionOptionDTOs; track opt.pwQuestionOptionId) {
-          <div class="flex items-center gap-2 mt-2">
-            <p-radiobutton
-              name="question_{{ question.pwQuestionId }}"
-              [value]="opt.pwQuestionOptionId"
-              [(ngModel)]="selectedOptionId"
-              (onChange)="onSelect(opt)">
-            </p-radiobutton>
-            <label class="cursor-pointer" (click)="selectByLabel(opt)">
-              {{ opt.name }}
-            </label>
-          </div>
-        }
-      </div>
 
-    </div>
-  }
+  <!--Work-VA-->
+@if (vaVoterQuestion()) {
+  <div class="form-check form-check-inline flex">
+    <span>{{ vaVoterQuestion()?.name }}</span>
+    <soch-other-radio
+      [options]="vaVoterOptions()"
+      (eventInputData)="saveVaVoter($event)"
+      [editValue]="vaVoterSelected()">
+    </soch-other-radio>
+  </div>
+}
+     <div class="form-check form-check-inline flex">
+        <span>Party Affiliation</span>
+       <soch-other-radio [options]="electionPartyOptions()" (eventInputData)="getFieldValue('electionPartiesDTO')" [editValue]="getFieldValue('electionPartiesDTO')"></soch-other-radio>
+
+</div>
 
 </div>
 

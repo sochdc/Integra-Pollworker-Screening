@@ -24,6 +24,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^20.2.14",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.0",
@@ -43,6 +44,7 @@
     "force": "^0.0.3",
     "ng2-pdf-viewer": "^10.4.0",
     "postcss": "^8.5.6",
+    "primeng": "^20.4.0",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.17",
     "tslib": "^2.3.0",
