@@ -24,5 +24,25 @@ export class ScreeningService {
   const url = APP_CONFIG_END_POINT.getPWLoadData;
   return this.http.get<any>(url+"/"+applicationId);
 }
+/*
+
+getChildQuestion(pwQuestionOptionId: number): Observable<any> {
+  const url = APP_CONFIG_END_POINT.getChildQuestion;
+  return this.http.get<any>(url+"/"+ pwQuestionOptionId);
+}*/
+
+
+getChildQuestion(pwQuestionOptionId: number): Observable<any> {
+  return this.http.get<any>(`${APP_CONFIG_END_POINT.getChildQuestion}/${pwQuestionOptionId}`);
+}
+/*
+getChildQuestion(pwQuestionOptionId: number): Observable<any> {
+  const base = APP_CONFIG_END_POINT.getChildQuestion;
+  const finalUrl = `${base}/${pwQuestionOptionId}`;
+
+  console.log('CHILD FINAL URL =>', finalUrl);
+
+  return this.http.get<any>(finalUrl);
+}*/
 
 }
