@@ -73,14 +73,17 @@
           }
         </div>
 
-        <div class="form-check form-check-inline flex">
-          <span>Gender&nbsp;</span>
-          <soch-other-radio
-            [options]="genderOptions()"
-            (eventInputData)="saveData('gender', $event)"
-            [editValue]="getFieldValue('gender')">
-          </soch-other-radio>
+        
+         <div class="grid grid-cols-1">Gender
+          </div>
+          
+           <div class="grid grid-cols-1">
+            <soch-radio-button [options]="genderOptions()"  (eventInputData)="saveData('gender', $event)"
+            [editValue]="getFieldValue('gender')"></soch-radio-button>
         </div>
+         <div class="grid grid-cols-1 mb-2">
+
+         </div>
 
 <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-3">
   <!-- Year -->
@@ -197,91 +200,56 @@
           <div class="w-full bg-gray-100 border border-gray-200 p-2 text-xl font-bold">
             Questions
           </div>
-
-          <div class="form-check form-check-inline flex">
-            <span>Party Affiliation</span>
-            <soch-other-radio
-              [options]="pwLoadData()?.electionPartiesDTOs"
-              (eventInputData)="saveData('electionPartiesDTO', $event)"
-              [editValue]="getFieldValue('electionPartiesDTO')">
-            </soch-other-radio>
+</div>
+         
+            
+              @if(pwLoadData() && pwLoadData().electionPartiesDTOs.length > 0)
+          {
+            <div class="grid grid-col-1">
+            Party Affiliation
+           </div> 
+         <div class="grid grid-cols-1">
+            <soch-radio-button [options]="pwLoadData().electionPartiesDTOs" [displayName]="'partyName'"></soch-radio-button>
           </div>
-        </div>
-
-        @for (loadData of pwLoadData()?.pwQuestionsDTO?.generalQAs; track loadData?.pwQuestionId) {
-
+        }
+          
+        
+          @if(pwLoadData()){
+        @for(loadData of pwLoadData()?.pwQuestionsDTO.generalQAs;track loadData.pwQuestionId ){
+        
           <div class="grid grid-cols-1">
-            <div [innerHTML]="loadData?.name"></div>
+              <div [innerHTML]="loadData?.name"></div>
           </div>
+        
+          @if(loadData?.radioFlag){
+               <div class="grid grid-cols-1">
+            <soch-radio-button [options]="loadData?.pwQuestionOptionDTOs"></soch-radio-button>
 
-          @if (loadData?.radioFlag) {
-            <div class="grid grid-cols-1">
-              <soch-other-radio
-                [options]="toRadioOptions(loadData?.pwQuestionOptionDTOs)"
-                (eventInputData)="onSelectQuestion(loadData, $event)"
-                [editValue]="getSelectedOptionId(loadData)">
-              </soch-other-radio>
-            </div>
+
+             
+          </div>
+          <!-- <soch-other-radio [options]="loadData?.pwQuestionOptionDTOs"
+            (eventInputData)="getFieldValue('pwQuestionsDTO')"
+            [editValue]="getFieldValue('pwQuestionsDTO')"></soch-other-radio> -->
+            
+          }
+          @if(loadData?.textBoxFlag)
+          {
+          <!-- soch teat area -->
+
+          <soch-text-area [options]="loadData?.pwQuestionOptionDTOs" (eventInputData)="getFieldValue('pwQuestionsDTO')"
+            [editValue]="getFieldValue('pwQuestionsDTO')"></soch-text-area>
           }
 
-          @if (loadData?.textBoxFlag) {
-            <soch-text-area
-              [options]="loadData?.pwQuestionOptionDTOs"
-              (eventInputData)="onTextAnswer(loadData, $event)"
-              [editValue]="loadData?.answerText">
-            </soch-text-area>
+
+          @if(loadData?.optionFlag)
+          {
+          <!--dropdown -->
+          <soch-checkbox [options]="loadData?.pwQuestionOptionDTOs" (eventInputData)="getFieldValue('pwQuestionsDTO')"
+            [editValue]="getFieldValue('pwQuestionsDTO')"></soch-checkbox>
           }
-
-          @if (loadData?.optionFlag) {
-            <soch-checkbox
-              [options]="loadData?.pwQuestionOptionDTOs"
-              (eventInputData)="onDropdownAnswer(loadData, $event)">
-            </soch-checkbox>
+       
           }
-
-          <!-- ===== Child Questions (safe strict mode) ===== -->
-          @let parentId = loadData?.pwQuestionId;
-          @let kids = parentId ? getChildren(parentId) : [];
-
-          @if (kids.length > 0) {
-            @for (child of kids; track child?.pwQuestionId) {
-
-              <div class="grid grid-cols-1 mt-3 pl-4 border-l border-gray-200">
-                <div [innerHTML]="child?.name"></div>
-              </div>
-
-              @if (child?.radioFlag) {
-                <div class="grid grid-cols-1 pl-4">
-                  <soch-other-radio
-                    [options]="toRadioOptions(child?.pwQuestionOptionDTOs)"
-                    (eventInputData)="onSelectQuestion(child, $event)"
-                    [editValue]="getSelectedOptionId(child)">
-                  </soch-other-radio>
-                </div>
-              }
-
-              @if (child?.textBoxFlag) {
-                <div class="pl-4">
-                  <soch-text-area
-                    [options]="child?.pwQuestionOptionDTOs"
-                    (eventInputData)="onTextAnswer(child, $event)"
-                    [editValue]="child?.answerText">
-                  </soch-text-area>
-                </div>
-              }
-
-              @if (child?.optionFlag) {
-                <div class="pl-4">
-                  <soch-checkbox
-                    [options]="child?.pwQuestionOptionDTOs"
-                    (eventInputData)="onDropdownAnswer(child, $event)">
-                  </soch-checkbox>
-                </div>
-              }
-
-            }
-          }
-
         }
 
         <!-- ===================== LANGUAGES ===================== -->
@@ -329,6 +297,7 @@
         </div>
 
         }
+    
       </div>
 
       <div class="flex shrink-0 justify-end px-2 py-2">
