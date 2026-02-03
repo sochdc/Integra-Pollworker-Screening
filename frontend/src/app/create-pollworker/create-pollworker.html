@@ -51,13 +51,13 @@
         </div>
 
         <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-2">
-          <soch-input-text [fieldObject]="getFiledObject('workNumber')"
+          <soch-input-number [fieldObject]="getFiledObject('workNumber')"
             (eventInputData)="saveData('workNumber',$event)"
-            [editValue]="getFieldValue('workNumber')"></soch-input-text>
+            [editValue]="getFieldValue('workNumber')"></soch-input-number>
 
-          <soch-input-text [fieldObject]="getFiledObject('homeNumber')"
+          <soch-input-number [fieldObject]="getFiledObject('homeNumber')"
             (eventInputData)="saveData('homeNumber',$event)"
-            [editValue]="getFieldValue('homeNumber')"></soch-input-text>
+            [editValue]="getFieldValue('homeNumber')"></soch-input-number>
         </div>
 
         <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-1">
@@ -254,20 +254,21 @@
         }
 
         <!-- ===================== LANGUAGES ===================== -->
+         @if(pwLoadData() && pwLoadData().languageDTOs.length>0){
         <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-1">
           <soch-select [fieldObject]="getFiledObject('primaryLanguageDTO')"
             (eventInputData)="saveData('primaryLanguageDTO', $event)"
-            [options]="primaryLanguage()"
+            [options]="pwLoadData().languageDTOs"
             [editValue]="getFieldValue('primaryLanguageDTO')"></soch-select>
         </div>
 
         <div class="grid grid-cols-1 mb-2 gap-4 md:grid-cols-1">
           <soch-select [fieldObject]="getFiledObject('secondaryLanguageDTO')"
             (eventInputData)="saveData('secondaryLanguageDTO', $event)"
-            [options]="secondaryLanguage()"
+            [options]="pwLoadData().languageDTOs"
             [editValue]="getFieldValue('secondaryLanguageDTO')"></soch-select>
         </div>
-
+      }
         <!-- ===================== AGREEMENT ===================== 
         <div class="w-full mt-6">
           <div class="w-full bg-gray-100 border border-gray-200 p-2 text-xl font-bold">
@@ -329,9 +330,7 @@
   </div>
   <!-- </form> -->
 </div>
-
         }
-    
       </div>
 
       <div class="flex shrink-0 justify-end px-2 py-2">
@@ -344,5 +343,7 @@
       </div>
     </div>
     }
+    <div class="flex shrink-0 justify-end px-4 py-4"> 
+  </div>
   </div>
 </div>

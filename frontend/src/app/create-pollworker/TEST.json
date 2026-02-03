@@ -1,0 +1,50 @@
+{
+    "addressFlag": true,
+    "activeFlag": true,
+    "agreeTerms": false,
+    "firstName": "T",
+    "middleName": "t",
+    "lastName": "t",
+    "gender": "Male",
+    "phoneNumber": "987654323234",
+    "homeNumber": "8765432255",
+    "emailId": "t@gm.com",
+    "yearOfBirth": "1991",
+    "monthOfBirth": "jan",
+    "dayOfBirth": "2",
+    "ssn": "098-76-5433",
+    "address1": "st",
+    "address2": "st",
+    "city": "st",
+    "state": "AZ",
+    "zipCode": "98765-4323",
+    "primaryLanguageDTO": "Amharic",
+    "secondaryLanguageDTO": "Amharic",
+    "electionPartiesDTOs": {
+        "electionPartyId": 2,
+        "partyName": "Republican",
+        "activeFlag": null,
+        "count": 0,
+        "selected": "true"
+    },
+    "localityDTO": {
+        "localityId": 370,
+        "name": null
+    },
+    "generalQAs": {
+        "pwQuestionOptionId": 155,
+        "name": "Yes",
+        "selected": "true"
+    },
+    "miscellaneousQAs": [],
+    "createdBy": "QA Soch",
+    "mailingAddress1": "st",
+    "mailingAddress2": "st",
+    "mailingCity": "st",
+    "mailingState": "AZ",
+    "mailingZipCode": "98765-4323"
+}
+
+
+
+

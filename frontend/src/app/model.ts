@@ -361,7 +361,7 @@ export class PollWorkerDTO {
   secondaryLanguageDTO: secondaryLanguageObject|null=null;
   // Election / Locality
   electionPartiesDTOs: ElectionPartiesDTO|Array<any>|null=null;
-  localityDTO: LocalityDTO | number | null = null;
+  localityDTO: LocalityDTO | null = null;
   generalQAs: Array<any> | null = null;
   miscellaneousQAs: Array<any> | null = null;
   // Audit
@@ -770,11 +770,12 @@ export {monthsList};
 }
 
 export interface primaryLanguageObject {
-    name: string;
-  code: string;
+languageId:number;
+name: string;
+  //code: string;
 
 }
-
+/*
 const primaryLanguageList: primaryLanguageObject[] = [ {
    name: '-- Select Language1  --',
     code: '',
@@ -853,16 +854,17 @@ const primaryLanguageList: primaryLanguageObject[] = [ {
   },
 ]
 
-export {primaryLanguageList};
+export {primaryLanguageList};*/
 
 
 export interface secondaryLanguageObject {
+  languageId:number;
   name: string;
-  code: string;
+  //code: string;
 }
 
 
-
+/*
 const secondaryLanguageList: secondaryLanguageObject[] = [
   {
     name: '-- Select Language 2(optional) --',
@@ -941,7 +943,7 @@ const secondaryLanguageList: secondaryLanguageObject[] = [
     code: 'yo',
   },
 ]
-export { secondaryLanguageList };
+export { secondaryLanguageList }; */
 
 export interface ElectionPartyDTO {
   electionPartyId: number;
@@ -953,7 +955,7 @@ export interface ElectionPartyDTO {
 export interface pwLoadData {
   contactPreferenceDTOs :  Array<ContactPreferenceDTO>;
   electionPartiesDTOs : Array<ElectionPartiesDTO>;
-  languageDTOs: Array<LanguageDTO>;
+  languageDTOs: LanguageDTO| number;
  pwQuestionsDTO: Array<PwQuestionsDTO>
 }
 export class ContactPreferenceDTO {
@@ -1016,7 +1018,7 @@ name:string|null=null;
 
 export class LocalityDTO {
 localityId:number|null=null;
-name:String | null=null;
+name:String|null=null;
 }
 export class PollWorkerStatusDTO {
 pwStatusId:number|null=null;

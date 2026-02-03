@@ -23,15 +23,16 @@ import {
 } from '@angular/forms';
 
 import {
+  LocalityDTO,
   MonthObject,
   monthsList,
   PollWorkerDTO,
   PollWorkerQuestionDTO,
-  primaryLanguageList,
+  //primaryLanguageList,
   primaryLanguageObject,
   PwQuestionsDTO,
   screenName,
-  secondaryLanguageList,
+ // secondaryLanguageList,
   secondaryLanguageObject,
   StateObject,
   statesList,
@@ -102,6 +103,7 @@ isAgreementAccepted = false;
   get question() {
     return this.questions?.[this.indexValue];
   }
+  public pwQuestions=signal<Array<PollWorkerQuestionDTO>|null>([]);
 
   constructor(
     private fb: FormBuilder,
@@ -111,8 +113,8 @@ isAgreementAccepted = false;
   ) {
     this.states.set(statesList);
     this.months.set(monthsList);
-    this.primaryLanguage.set(primaryLanguageList);
-    this.secondaryLanguage.set(secondaryLanguageList);
+    //this.primaryLanguage.set(primaryLanguageList);
+    //this.secondaryLanguage.set(secondaryLanguageList);
 
     effect(() => {
       this.applicationId = this.helpService.localityInfo().applicationId!;
@@ -151,6 +153,7 @@ isAgreementAccepted = false;
         console.log('PW Load response:', pwQuestion);
 
         this.pwLoadData.set(pwQuestion);
+        this.pwQuestions.set(pwQuestion.pwQuestionsDTO.generalQAs);
 
         // reset children whenever main data reloads
         this.childQuestionsMap.set({});
@@ -475,11 +478,11 @@ setSaveData(pw: PollWorkerDTO) {
   pw.homeNumber = this.createPollworkerForm?.get('homeNumber')?.value ?? null;
   pw.emailId = this.createPollworkerForm?.get('emailId')?.value ?? null;
 
-  pw.gender = this.createPollworkerForm?.get('gender')?.value ?? null;
+  pw.gender = this.createPollworkerForm?.get('gender')?.value.name ?? null;
   //year, month,day,electionPartiesDTO
   pw.yearOfBirth = this.createPollworkerForm?.get('yearOfBirth')?.value ?? null;
   pw.monthOfBirth = this.createPollworkerForm?.get('monthOfBirth')?.value.value ?? null;
-  pw.dayOfBirth = this.createPollworkerForm?.get('dayOfBirth')?.value ?? null;
+  pw.dayOfBirth = this.createPollworkerForm?.get('dayOfBirth')?.value.name ?? null;
 
   pw.ssn = this.createPollworkerForm?.get('ssn')?.value ?? null;
   pw.address1 = this.createPollworkerForm?.get('address1')?.value ?? null;
@@ -496,20 +499,22 @@ setSaveData(pw: PollWorkerDTO) {
     pw.agreeTerms =
     this.createPollworkerForm?.get('agreeTerms')?.value ?? false;
   pw.primaryLanguageDTO = 
-    this.createPollworkerForm?.get('primaryLanguageDTO')?.value.name;
+    this.createPollworkerForm?.get('primaryLanguageDTO')?.value;
 
   pw.secondaryLanguageDTO =
-    this.createPollworkerForm?.get('secondaryLanguageDTO')?.value.name;
+    this.createPollworkerForm?.get('secondaryLanguageDTO')?.value;
   console.log('election:',this.createPollworkerForm?.get('electionPartiesDTOs')?.value)
     //electionPartiesDTO
   pw.electionPartiesDTOs =
 this.electionparty;
 //localityDTO
-  pw.localityDTO = this.helpService.localityInfo().localityId;
+pw.localityDTO=new LocalityDTO();
+  pw.localityDTO!.localityId = this.helpService.localityInfo().localityId!;
+  pw.localityDTO.name=this.helpService.localityInfo().localityName;
 
-  pw.generalQAs =
+  pw.generalQAs =this.pwQuestions();
     //this.createPollworkerForm?.get('generalQAs')?.value ?? [];
-    this.generalQuestionsfaq;
+    // this.generalQuestionsfaq;
 
   pw.miscellaneousQAs =
     this.createPollworkerForm?.get('miscellaneousQAs')?.value ?? [];
@@ -520,7 +525,6 @@ this.electionparty;
   pw.createdBy =
     this.helpService.localityInfo().firstName + ' ' +
     this.helpService.localityInfo().lastName;
-
 
 }
 
