@@ -333,60 +333,52 @@ export class WorkHoursDTO {
 }
 
 export class PollWorkerDTO {
-  pollworkerId:any|null=null;
-  requestId:any|null=null;
-  firstName:any|null=null;
-  lastName:any|null=null;
-  middleName:any|null=null;
-  createdBy:any|null=null;
-  updatedBy:any|null=null;
-  suffix:any|null=null;
-  phoneNumber:any|null=null;
-  workNumber:any|null=null;
-  homeNumber:any|null=null;
-  emailId:any|null=null;
-  secondaryEmailId:any|null=null;
-  activeFlag:any|null=null;
-  address1:any|null=null;
-  address2:any|null=null;
-  city:any|null=null;
-  state:any|null=null;
-  zipCode:any|null=null;
-  reqSubmittedDt:any|null=null;
-  dob:any|null=null;
-  dayOfBirth:any|null=null;
-  monthOfBirth:any|null=null;
-  yearOfBirth:any|null=null;
-  ssn:any|null=null;
-  contactPreferenceDTOs:ContactPreferenceDTO|null=null;
-electionPartiesDTOs : ElectionPartiesDTO | null = null;
-languageDTOs: LanguageDTO | null= null;
-pwQuestionsDTO: PwQuestionsDTO | null = null;
+   addressFlag: boolean=true;
+  activeFlag: boolean | null = null;
+  agreeTerms: boolean | null = null;
+  // Personal Information
+  firstName: string | null = null;
+  middleName: string | null = null;
+  lastName: string | null = null;
+  gender: string | null = null;
+  // Contact Information
+  phoneNumber: string | null = null;
+  homeNumber: string | null = null;
+  emailId: string | null = null;
+  // Birth Information
+  yearOfBirth: string | null = null;
+  monthOfBirth: string | null = null;
+  dayOfBirth: number | null = null;
+  ssn: string | null = null;
+  // Address Information
+  address1: string | null = null;
+  address2: string | null = null;
+  city: string | null = null;
+  state: string | null = null;
+  zipCode: string | null = null;
+  // Language
+  primaryLanguageDTO:primaryLanguageObject|null=null;
+  secondaryLanguageDTO: secondaryLanguageObject|null=null;
+  // Election / Locality
+  electionPartiesDTOs: ElectionPartiesDTO|Array<any>|null=null;
+  localityDTO: LocalityDTO | number | null = null;
+  generalQAs: Array<any> | null = null;
+  miscellaneousQAs: Array<any> | null = null;
+  // Audit
+  createdBy: string | null = null;
+mailingAddress1: any | null = null;
+mailingAddress2: any | null = null;
+mailingCity: any | null = null;
+mailingState: any | null = null;
+mailingZipCode: any | null = null;
 
-  primaryLanguageOther:any|null=null;
-  agreeTerms:any|null=null;
-  primaryLanguageDTO:any|null=null;
-  secondaryLanguageOther:any|null=null;
-  secondaryLanguageDTO:any|null=null;
-  electionPartiesDTO:any|null=null;
-  localityDTO:any|null=null;
-  gender:any|null=null;
-  pollWorkerStatusDTO:any|null=null;
-  generalQAs: any;
-  miscellaneousQAs: any;
-  notes:any|null=null;
-  pwDecisionStatusDTO: PWDecisionStatusDTO|null=null;
-  pwOtherInformation:any|null=null;
-  complaints:any|null=null;
 }
-
 
 
 export class PWDecisionStatusDTO {
   pwDecisionStatusId:any|null=null;
   name:any|null=null;
 }
-
 
 
 export class VendorsDTO {
@@ -969,9 +961,9 @@ contactPreferenceId:Number|null=null;
 name:String|null=null;
 }
 export class ElectionPartiesDTO{
-electionPartyId:Number|null=null;
+electionPartyId: Number|null=null;
 partyName: String|null=null;
-activeFlag: boolean | undefined|null;
+activeFlag: boolean | undefined|null=null;
 count: Number|null=null;
 }
 export class LanguageDTO{
@@ -1002,13 +994,14 @@ orderOfInsertion:number|null=null;
 requiredFlag:boolean|undefined|null;
 selectedValue:number |null=null;
 parentQuestionId:number|null=null;
+pwQuestionOptionDTO:any|null=null;
 }
 export class PWQuestionOptionDTO {
 pwQuestionOptionId:number|null=null;
 name:string|null=null;
 activeFlag:boolean|undefined|null;
 createdBy:String | null=null;
-selected:boolean|undefined|null; ;
+selected:boolean|undefined|null; 
 }
 export class PollWorkerQAsDTO {
 pollworkerQAId:number|null=null;
@@ -1019,4 +1012,13 @@ pollWorkerQuestionDTO: any;
 createdBy:string|null=null;
 updatedBy:string|null=null;
 name:string|null=null;
+}
+
+export class LocalityDTO {
+localityId:number|null=null;
+name:String | null=null;
+}
+export class PollWorkerStatusDTO {
+pwStatusId:number|null=null;
+name:String | null=null;
 }

@@ -40,5 +40,5 @@ export const APP_CONFIG_END_POINT = {
   getPWLoadData: apiBaseUrl + 'getPWLoadData',
   getPollWorkersDecisionCountJson:apiBaseUrl+"getPollWorkersDecisionCountJson",
  getChildQuestion: apiBaseUrl + 'getChildQuestion',
-
+savePollWorker: apiBaseUrl + 'savePollWorker',
 }      

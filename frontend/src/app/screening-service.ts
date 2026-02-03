@@ -32,17 +32,15 @@ getChildQuestion(pwQuestionOptionId: number): Observable<any> {
 }*/
 
 
-getChildQuestion(pwQuestionOptionId: number): Observable<any> {
-  return this.http.get<any>(`${APP_CONFIG_END_POINT.getChildQuestion}/${pwQuestionOptionId}`);
-}
-/*
-getChildQuestion(pwQuestionOptionId: number): Observable<any> {
-  const base = APP_CONFIG_END_POINT.getChildQuestion;
-  const finalUrl = `${base}/${pwQuestionOptionId}`;
 
-  console.log('CHILD FINAL URL =>', finalUrl);
+ getChildQuestion(body: any): Observable<any> {
+    const url = APP_CONFIG_END_POINT.getChildQuestion;
+    return this.http.post<any>( url,body);
+  }
+ savePollWorker(body: any): Observable<any> {
+    const url = APP_CONFIG_END_POINT.savePollWorker;
+    return this.http.post<any>(url, body);
+  }
 
-  return this.http.get<any>(finalUrl);
-}*/
 
 }

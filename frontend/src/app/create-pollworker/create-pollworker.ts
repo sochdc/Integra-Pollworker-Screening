@@ -25,8 +25,11 @@ import {
 import {
   MonthObject,
   monthsList,
+  PollWorkerDTO,
+  PollWorkerQuestionDTO,
   primaryLanguageList,
   primaryLanguageObject,
+  PwQuestionsDTO,
   screenName,
   secondaryLanguageList,
   secondaryLanguageObject,
@@ -85,9 +88,16 @@ showMailingState = signal(true);
 
   // -------- PW Load data --------
   pwLoadData = signal<any>(null);
+generalQuestions = signal<any[]>([]);
+showAgreementError = false;
+isAgreementAccepted = false;
 
   // -------- Children map (parentPwQuestionId -> children[]) --------
   childQuestionsMap = signal<Record<number, any[]>>({});
+  PollWorkerQuestionDTO: any;
+  invalidControls: any;
+  electionparty: any;
+  generalQuestionsfaq: any;
 
   get question() {
     return this.questions?.[this.indexValue];
@@ -112,6 +122,7 @@ showMailingState = signal(true);
       if (one) {
         this.createPollworkerForm = this.fb.group({});
         this.buildForm();
+          
 
         const month = this.createPollworkerForm?.get('monthOfBirth')?.value;
         const year = this.createPollworkerForm?.get('yearOfBirth')?.value;
@@ -184,7 +195,16 @@ showMailingState = signal(true);
   }
 
   // -------------------- Main selection handler (parent + child) --------------------
-  onSelectQuestion(q: any, event: any) {
+  onSelectQuestion(event: any,parentPwQuestion:PollWorkerQuestionDTO ) {
+    if(event.detail&&event.detail.partyName)
+{
+  this.electionparty=event.detail
+}
+if(event.detail&&event.detail.pwQuestionOptionId){
+  this.generalQuestionsfaq= event.detail
+}
+
+/*
     const selectedOptionIdRaw =
       event?.detail?.pwQuestionOptionId ??
       event?.detail?.value ??
@@ -193,85 +213,69 @@ showMailingState = signal(true);
       event?.value ??
       event;
 
-    const selectedOptionId = Number(selectedOptionIdRaw);
-
-    console.log('RADIO RAW EVENT:', event);
-    console.log('Resolved optionId:', selectedOptionId);
-
-    if (!q || !selectedOptionId || Number.isNaN(selectedOptionId)) {
-      console.error('Invalid selection / question:', { q, selectedOptionIdRaw });
-      return;
-    }
-
-    // update selected on question options
-    q.pwQuestionOptionDTOs?.forEach((o: any) => {
-      o.selected = o.pwQuestionOptionId === selectedOptionId;
-    });
-
-    const selectedOpt = q.pwQuestionOptionDTOs?.find(
-      (o: any) => o.pwQuestionOptionId === selectedOptionId
-    );
-
-    console.log('[PARENT CLICK]', {
-      pwQuestionId: q.pwQuestionId,
-      childExists: q.childExists,
-      selectedOptionId,
-      selectedOptName: selectedOpt?.name,
-    });
-
-    // If no children -> clear & stop
-    if (!q.childExists) {
-      this.clearChildren(q.pwQuestionId);
-      return;
-    }
-
-    // Only load children when user picks YES
-    const isYes = String(selectedOpt?.name || '').trim().toLowerCase() === 'yes';
-
-    if (!isYes) {
-      this.clearChildren(q.pwQuestionId);
-      return;
-    }
-
-    console.log('[CHILD API CALL]', `/getChildQuestion/${selectedOptionId}`);
-
-    this.screeningService.getChildQuestion(selectedOptionId).subscribe({
+   console.log('event details:',event.detail)
+   if(event?.detail?.partyName){
+    //this.createPollworkerForm?.get('electionPartiesDTO');
+    this.electionparty =event?.detail?.partyName;
+   }
+if(parentPwQuestion.childExists){
+  parentPwQuestion.pwQuestionOptionDTO=event.detail;
+    this.screeningService.getChildQuestion(parentPwQuestion).subscribe({
       next: (res: any) => {
-        console.log('[CHILD API RESPONSE RAW]', res);
-
+        const childBlock = res?.childQAsDTO ?? {};
         // handle multiple possible shapes safely
-        const kids =
-          res?.pwQuestionsDTO?.generalQAs ??
-          res?.generalQAs ??
-          res?.pwQuestionsDTO ??
-          res ??
+            const kids =
+          childBlock?.generalQAs ??
+          childBlock?.childQAs ??
+          childBlock?.questions ??
           [];
 
-        const kidsArr = Array.isArray(kids) ? kids : [];
-        this.setChildren(q.pwQuestionId, kidsArr);
 
-        console.log('[CHILD QUESTIONS SET]', {
-          parentPwQuestionId: q.pwQuestionId,
-          count: kidsArr.length,
-        });
+        const kidsArr = Array.isArray(kids) ? kids : [];
+       // this.setChildren(q.pwQuestionId, kidsArr);
 
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('[CHILD API ERROR]', err);
-        this.clearChildren(q.pwQuestionId);
+      //  this.clearChildren(q.pwQuestionId);
       },
     });
+  }else{
+  //  this.clearChildren(q.pwQuestionId);
+  }*/
   }
 
   // -------------------- Build form from screenNames --------------------
   buildForm() {
+    console.log(this.screenNames());
+    const something = [
+    "dob",
+    "electionPartiesDTO",
+    "localityDTO",
+    "countyId",
+    "termStartDt",
+    "termEndDt",
+    "grPrecinctDTO",
+    "pwTitleDTO",
+    "countySiteId",
+    "voterId",
+    "preferredName",
+    "createdBy",
+    "electionDayFlag",
+    "earlyVotingFlag",
+    "prePostFlag",
+    "electionExperience",
+    "phoneNumber",
+    "pwGrade",
+    "ewsFlag"
+]
     this.screenNames().forEach((fieldData: any) => {
       fieldData.requiredFlag = true;
 
       const conditionalValidators: ValidatorFn[] = [];
 
-      if (fieldData.requiredFlag) {
+      if (fieldData.requiredFlag && !something.includes(fieldData.fieldName)) {
         conditionalValidators.push(Validators.required);
 
         if (fieldData.minLength) conditionalValidators.push(Validators.minLength(fieldData.minLength));
@@ -287,6 +291,7 @@ showMailingState = signal(true);
         new FormControl(null, conditionalValidators)
       );
     });
+    console.log('createPollworkerForm', this.createPollworkerForm);
   }
 
   // -------------------- Field helpers --------------------
@@ -401,25 +406,7 @@ saveData(type: string, event: any) {
     this.days.set(dayList);
   }
 
-  // -------------------- Mailing same as physical --------------------
- /*  getAddress(event: any) {
-    if (event?.detail) {
-      this.createPollworkerForm?.get('mailingAddress1')?.setValue(this.createPollworkerForm?.get('address1')?.value);
-      this.createPollworkerForm?.get('mailingAddress2')?.setValue(this.createPollworkerForm?.get('address2')?.value);
-      this.createPollworkerForm?.get('mailingCity')?.setValue(this.createPollworkerForm?.get('city')?.value);
-      this.createPollworkerForm?.get('mailingState')?.setValue(this.createPollworkerForm?.get('state')?.value);
-      this.createPollworkerForm?.get('mailingZipCode')?.setValue(this.createPollworkerForm?.get('zipCode')?.value);
-    } else {
-      this.createPollworkerForm?.get('mailingAddress1')?.setValue(null);
-      this.createPollworkerForm?.get('mailingAddress2')?.setValue(null);
-      this.createPollworkerForm?.get('mailingCity')?.setValue(null);
-      this.createPollworkerForm?.get('mailingState')?.setValue(null);
-      this.createPollworkerForm?.get('mailingZipCode')?.setValue(null);
-    }
-
-    console.log('Form value after getAddress:', this.createPollworkerForm?.value);
-    this.cdr.detectChanges();
-  }*/
+  
 
 private rerenderMailingState() {
   this.showMailingState.set(false);
@@ -478,4 +465,100 @@ getAddress(event: any) {
     q.selectedOption = value;
     console.log('[DROPDOWN ANSWER]', { pwQuestionId: q?.pwQuestionId, value });
   }
+  
+setSaveData(pw: PollWorkerDTO) {
+  pw.firstName = this.createPollworkerForm?.get('firstName')?.value ?? null;
+  pw.middleName = this.createPollworkerForm?.get('middleName')?.value ?? null;
+  pw.lastName = this.createPollworkerForm?.get('lastName')?.value ?? null;
+//phone
+  pw.phoneNumber = this.createPollworkerForm?.get('workNumber')?.value ?? null;
+  pw.homeNumber = this.createPollworkerForm?.get('homeNumber')?.value ?? null;
+  pw.emailId = this.createPollworkerForm?.get('emailId')?.value ?? null;
+
+  pw.gender = this.createPollworkerForm?.get('gender')?.value ?? null;
+  //year, month,day,electionPartiesDTO
+  pw.yearOfBirth = this.createPollworkerForm?.get('yearOfBirth')?.value ?? null;
+  pw.monthOfBirth = this.createPollworkerForm?.get('monthOfBirth')?.value.value ?? null;
+  pw.dayOfBirth = this.createPollworkerForm?.get('dayOfBirth')?.value ?? null;
+
+  pw.ssn = this.createPollworkerForm?.get('ssn')?.value ?? null;
+  pw.address1 = this.createPollworkerForm?.get('address1')?.value ?? null;
+  pw.address2 = this.createPollworkerForm?.get('address2')?.value ?? null;
+  pw.city = this.createPollworkerForm?.get('city')?.value ?? null;
+  pw.state = this.createPollworkerForm?.get('state')?.value.code ?? null;
+  pw.zipCode = this.createPollworkerForm?.get('zipCode')?.value ?? null;
+
+  pw.mailingAddress1 = this.createPollworkerForm?.get('mailingAddress1')?.value ?? null;
+  pw.mailingAddress2 = this.createPollworkerForm?.get('mailingAddress2')?.value ?? null;
+  pw.mailingCity = this.createPollworkerForm?.get('mailingCity')?.value ?? null;
+  pw.mailingState = this.createPollworkerForm?.get('mailingState')?.value.code?? null;
+  pw.mailingZipCode = this.createPollworkerForm?.get('mailingZipCode')?.value ?? null;
+    pw.agreeTerms =
+    this.createPollworkerForm?.get('agreeTerms')?.value ?? false;
+  pw.primaryLanguageDTO = 
+    this.createPollworkerForm?.get('primaryLanguageDTO')?.value.name;
+
+  pw.secondaryLanguageDTO =
+    this.createPollworkerForm?.get('secondaryLanguageDTO')?.value.name;
+  console.log('election:',this.createPollworkerForm?.get('electionPartiesDTOs')?.value)
+    //electionPartiesDTO
+  pw.electionPartiesDTOs =
+this.electionparty;
+//localityDTO
+  pw.localityDTO = this.helpService.localityInfo().localityId;
+
+  pw.generalQAs =
+    //this.createPollworkerForm?.get('generalQAs')?.value ?? [];
+    this.generalQuestionsfaq;
+
+  pw.miscellaneousQAs =
+    this.createPollworkerForm?.get('miscellaneousQAs')?.value ?? [];
+  pw.agreeTerms =
+    this.createPollworkerForm?.get('agreeTerms')?.value ?? false;
+
+  pw.activeFlag = true;
+  pw.createdBy =
+    this.helpService.localityInfo().firstName + ' ' +
+    this.helpService.localityInfo().lastName;
+
+
+}
+
+
+onSend() {
+  if (!this.createPollworkerForm?.valid || !this.agreementForm?.valid) {
+
+    this.createPollworkerForm?.markAllAsTouched();
+    this.agreementForm?.markAllAsTouched();
+
+    console.log('[INVALID FORM]', {
+      createPollworkerForm: this.createPollworkerForm,
+      agreementForm: this.agreementForm,
+    });
+
+    return;
+  }
+  const pollWorker = new PollWorkerDTO();
+  this.setSaveData(pollWorker);
+
+  this.screeningService.savePollWorker(pollWorker).subscribe({
+    next: (res: any) => {
+      console.log('[SAVE SUCCESS]', res);
+      this.show.set(true);
+    },
+    error: (err: any) => {
+      console.error('[SAVE ERROR]', err);
+    }
+  });
+}
+onAgreementChange(event: Event) {
+  const checked = (event.target as HTMLInputElement).checked;
+  this.isAgreementAccepted = checked;
+  this.showAgreementError = !checked;
+  const acceptTermsControl = this.agreementForm?.get('acceptTerms');
+  acceptTermsControl?.setValue(checked);
+  acceptTermsControl?.updateValueAndValidity();
+}
+
+
 }
