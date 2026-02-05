@@ -10,6 +10,7 @@ import { Component, effect, input, output } from '@angular/core';
 export class Background37 {
 public readonly show = input<boolean>(false);
 public readonly close = output<boolean>();
+public readonly showhas = input<boolean>(false);
    constructor() {
     effect(() => {
       

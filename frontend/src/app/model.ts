@@ -21,6 +21,7 @@ export class UserDTOLoc {
   grLocalityName: string | null = null;
   customFields: Array<LocalityPwCustomFieldsDTO> | null = null;
   token: any | null = null;
+  userAccess: undefined;
 }
 
 export class LocalityPwCustomFieldsDTO {
@@ -99,7 +100,7 @@ export class GRLocationsDTO {
 
   public mailingState: string|null=null;;
 
-  public mailingZipCode: string|null=null;;
+  public mailingZipCode: string|null=null;
 
   public workPhone: string|null=null;;
 
@@ -1023,4 +1024,100 @@ name:String|null=null;
 export class PollWorkerStatusDTO {
 pwStatusId:number|null=null;
 name:String | null=null;
+}
+
+
+export class pwDecisionStatusDTO {
+        pwDecisionStatusId: number|null=null;
+        localitypwDecisionStatusId: number| null=null;
+        name: string| null=null;
+        internalCode: number|null=null;
+        activeFlag:boolean| null=null;
+
+    }
+   export class pwTitleDTO{
+        pwTitleId: number|null=null;
+        name:string|null=null;
+        activeFlag:boolean| null=null;
+    }
+  export class  grPrecinctDTO{
+        grPrecinctId: number|null=null;
+        precinctName: string|null=null;
+        precinctId: number|null=null;
+    }
+
+export class PollWorkerDecisionDetails{
+pollworkerId:number|null=null;
+requestId: String | null=null;
+firstName: String | null=null;
+lastName: String | null=null;
+middleName:String | null=null;
+activeFlag: boolean|null=null;
+address1:String| null=null;
+addressFlag:boolean|null=null;
+agreeTerms:boolean|null=null;
+city:String| null=null;
+complaintsHistory: Array<NotesDTO> |null=null;
+countySiteId:String|null=null;
+earlyVotingFlag: boolean|null=null;
+electionDayFlag:boolean |null=null;
+electionExperience: number|null=null;
+emailId: string|null=null;
+ewsFlag:boolean |null=null;
+gender:string| null=null;
+grPrecinctDTO: GRPrecinctDTO | null=null;
+latitude:string | null=null;
+longitude:string | null=null;
+mailingAddress1:String | null=null;
+mailingCity:String | null=null;
+mailingState:String | null=null;
+mailingZipCode: string|null=null;
+notesHistory: Array<NotesDTO> | null=null;
+phoneNumber: string|null=null;
+prePostFlag:boolean|null=null;
+preferredPrecinctLocation:string|null=null;
+profileImageFlag:boolean|null=null;
+pwActiveFlag:boolean|null=null;
+pwDecisionStatusDTO: PWDecisionStatusDTO|null=null;
+pwGrade:string|null=null;
+pwOtherInformationHistory: Array<NotesDTO> | null=null;
+pwTitleDTO: PWTitleDTO| null=null;
+state:string|null=null;
+termEndDt: Date| null=null;
+termStartDt:Date| null=null;
+updatedBy:string|null=null;
+updatedTs: Date| null=null;
+voterId:string|null=null;
+yearOfBirth: number|null=null;
+zipCode: string|null=null;
+
+}
+export class NotesDTO {
+notesId:number|null=null;
+notes: String|null=null;
+type:string|null=null;
+createdBy:string|null=null;
+createdTs:Date|null=null;
+updatedBy:string|null=null;
+updatedTs:Date|null=null;
+}
+export class complaintsHistory {
+  notesId:number|null=null;
+notes: String|null=null;
+type:string|null=null;
+createdBy:string|null=null;
+}
+export class notesHistory{
+  notesId:number|null=null;
+notes: String|null=null;
+type:string|null=null;
+createdBy:string|null=null;
+createdTs:Date|null=null;
+updatedBy:string|null=null;
+updatedTs:Date|null=null;
+}
+export class PWTitleDTO{
+  pwTitleId:number|null=null;
+  name:String|null=null;
+  activeFlag:boolean|null=null;
 }

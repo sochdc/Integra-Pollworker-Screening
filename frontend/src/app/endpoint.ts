@@ -41,4 +41,7 @@ export const APP_CONFIG_END_POINT = {
   getPollWorkersDecisionCountJson:apiBaseUrl+"getPollWorkersDecisionCountJson",
  getChildQuestion: apiBaseUrl + 'getChildQuestion',
 savePollWorker: apiBaseUrl + 'savePollWorker',
+getInternalPollWorkerDecisionDetails:apiBaseUrl +'getInternalPollWorkerDecisionDetails',
+getPWDecisionStatuses:apiBaseUrl+'getPWDecisionStatuses',
+getChildDataModels:apiBaseUrl+'getChildDataModels',
 }      

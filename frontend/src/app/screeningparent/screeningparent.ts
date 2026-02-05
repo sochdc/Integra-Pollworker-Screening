@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, inject, Input, input, signal, untracked } from '@angular/core';
-import { DataModelDTO, IncidentManagementSystemDTO, screenName, UserDTOLoc } from '../model';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, EventEmitter, inject, Input, input, Output, signal, untracked } from '@angular/core';
+import { DataModelDTO, IncidentManagementSystemDTO, PollWorkerDecisionDetails, screenName, UserDTOLoc } from '../model';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { Helpservice } from '../helpservice';
 import { HttpClient } from '@angular/common/http';
@@ -7,10 +7,12 @@ import { APP_CONFIG_END_POINT } from '../endpoint';
 import { Background37 } from '../background37/background37';
 import { CreatePollworker } from '../create-pollworker/create-pollworker';
 import { CommonModule } from '@angular/common';
+import { EditParent } from '../edit-parent/edit-parent';
+import { EditPollworker } from '../edit-pollworker/edit-pollworker';
 
 @Component({
   selector: 'app-screeningparent',
-  imports: [Background37,CreatePollworker, CommonModule],
+  imports: [Background37,CreatePollworker, CommonModule,EditPollworker,EditParent],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './screeningparent.html',
   styleUrl: `./screeningparent.scss`,
@@ -26,12 +28,12 @@ public type = signal<DataModelDTO | null>(null);
 public dataModel=input<DataModelDTO|null>(null);
 public status=signal<any|null>(null);
 public dd = signal<Array<screenName> | null>(null);
-public selectedIncidentDto = signal<IncidentManagementSystemDTO | null>(null);
+public selectedIncidentDto = signal<PollWorkerDecisionDetails| null>(null);
 public showCreate = signal<true | false>(false);
  @Input() isOpen: boolean = false;
-
-
-
+@Output() showType = new EventEmitter<any>();
+public showEdit= signal<true | false>(false);
+public editDetails = signal<any>(null);
 constructor(private helpService:Helpservice,private httpClient:HttpClient) {
   this.show.set(false);
     // The effect will run immediately and every time myInput() changes
@@ -72,7 +74,8 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
             console.log("data models:",data);
 
             this.dd.set(data);
-            this.showCreate.set(true);
+        //    this.showCreate.set(true);
+           // this.showEdit.set(true);
           }
 
         }, error: (error) => {
@@ -83,31 +86,41 @@ constructor(private helpService:Helpservice,private httpClient:HttpClient) {
 
   getType(event:any)
   {
-    if(event.detail.create){
+    console.log('showEdit before:', this.showEdit());
+    console.log('SHOW TYPE EVENT:', event);
+    if(event?.detail?.create){
       this.getDataModels();
-    
-    
+      this.showCreate.set(true);
+    this.showEdit.set(false);
+    return;
     }
-    if(event.detail.editData&& event.detail.type){
+    if(event?.detail?.editData){
+       this.editDetails.set(event.detail.editData);
        this.getDataModels();
-      // this.showCreate.set(true);
-      //this.editDetails.set(event.detail.editData);  
+       this.showCreate.set(false);
+      this.showEdit.set(true);
+      
     }
   } 
-  
   clear()
   {
     this.showCreate.set(false);
+    this.showEdit.set(false);
   }
   onCreate(event:any)
   {
     this.showCreate.set(false);
+    this.showEdit.set(false);
     this.show.set(false);
     setTimeout(()=>{
       this.show.set(true);
     },100)
   }
-
+onEdit(row: any) {
+  this.showType.emit({
+    editData: row
+  });
+}
     getDecisions()
      {
        let url=APP_CONFIG_END_POINT.getPollWorkersDecisionCountJson;
